@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOWORK - 외주 프로젝트 관리 전문</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#6366F1',secondary:'#F8B195'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+letter-spacing: -0.02em;
+line-height: 1.3;
+}
+.hero-gradient {
+background: linear-gradient(to right, #ffffff, #e6f7f5);
+}
+.accordion-content {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.3s ease;
+}
+.accordion-content.active {
+max-height: 200px;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 50px;
+height: 24px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #ccc;
+transition: .4s;
+border-radius: 34px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 16px;
+width: 16px;
+left: 4px;
+bottom: 4px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .slider {
+background-color: #1EBEA5;
+}
+input:checked + .slider:before {
+transform: translateX(26px);
+}
+.custom-checkbox {
+display: inline-block;
+position: relative;
+padding-left: 30px;
+cursor: pointer;
+user-select: none;
+}
+.custom-checkbox input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+height: 0;
+width: 0;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #ddd;
+border-radius: 4px;
+}
+.custom-checkbox:hover input ~ .checkmark {
+border-color: #ccc;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #1EBEA5;
+border-color: #1EBEA5;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.custom-radio {
+display: inline-block;
+position: relative;
+padding-left: 30px;
+cursor: pointer;
+user-select: none;
+}
+.custom-radio input {
+position: absolute;
+opacity: 0;
+cursor: pointer;
+height: 0;
+width: 0;
+}
+.radio-mark {
+position: absolute;
+top: 0;
+left: 0;
+height: 20px;
+width: 20px;
+background-color: #fff;
+border: 2px solid #ddd;
+border-radius: 50%;
+}
+.custom-radio:hover input ~ .radio-mark {
+border-color: #ccc;
+}
+.custom-radio input:checked ~ .radio-mark {
+border-color: #1EBEA5;
+}
+.radio-mark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-radio input:checked ~ .radio-mark:after {
+display: block;
+}
+.custom-radio .radio-mark:after {
+top: 4px;
+left: 4px;
+width: 8px;
+height: 8px;
+border-radius: 50%;
+background: #1EBEA5;
+}
+</style>
+</head>
+<body class="bg-white">
+<!-- 헤더 내비게이션 -->
+<header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+<div class="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+<a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="text-2xl md:text-3xl font-bold text-primary">Mowork</a>
+<nav class="hidden md:flex items-center space-x-8">
+<a href="#solutions" class="text-gray-700 hover:text-primary transition-colors" onclick="scrollToSection('solutions'); return false;">솔루션</a>
+<a href="#manager" class="text-gray-700 hover:text-primary transition-colors" onclick="scrollToSection('manager'); return false;">MOWORK매니저</a>
+<a href="#how-it-works" class="text-gray-700 hover:text-primary transition-colors" onclick="scrollToSection('how-it-works'); return false;">이용방법</a>
+<a href="#faq" class="text-gray-700 hover:text-primary transition-colors" onclick="scrollToSection('faq'); return false;">FAQ</a>
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/5b78a738-57a3-41a3-a6bb-c25b6fba9b13" data-readdy="true" class="bg-primary text-white py-3 px-8 !rounded-button font-medium hover:opacity-90 transition-opacity whitespace-nowrap">시작하기</a>
+</nav>
+<button class="md:hidden w-10 h-10 flex items-center justify-center">
+<i class="ri-menu-line ri-2x text-gray-700"></i>
+</button>
+</div>
+</header>
+<!-- 히어로 섹션 -->
+<section class="pt-20 md:pt-24 bg-gradient-to-br from-[#F8F9FF] to-[#F0F4FF]">
+<div class="container mx-auto px-4 py-12 md:py-20">
+<div class="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+<div class="md:w-1/2 text-center md:text-left">
+<h1 class="text-[1.75rem] sm:text-[2.25rem] md:text-[3rem] font-bold text-gray-900 mb-3 md:mb-4 leading-[1.3] tracking-[-0.02em]">복잡한 외주 고민<br>
+Mowork로 끝내세요</h1>
+<p class="text-xl text-gray-700 mb-8 leading-[1.3] tracking-[-0.02em]">전문 프로젝트 매니저와 함께<br>리스크 없이 외주 프로젝트를 성공시키세요</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/5b78a738-57a3-41a3-a6bb-c25b6fba9b13" data-readdy="true" class="bg-primary text-white py-3 px-8 !rounded-button font-medium hover:opacity-90 transition-opacity whitespace-nowrap text-center">프로젝트 문의하기</a>
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/ebc679ae-fc9f-4907-b742-0206da98f892" data-readdy="true" class="border-2 border-primary text-primary py-3 px-8 !rounded-button font-medium hover:bg-primary/5 transition-colors whitespace-nowrap text-center">서비스 소개</a>
+</div>
+</div>
+<div class="md:w-1/2 flex justify-center">
+<img src="https://static.readdy.ai/image/7daee845f7f1470b0723a241ff60c728/5975e040a4af283a52b8386ca23b7745.png" alt="Mowork workspace" class="w-full h-auto object-cover border-none">
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 문제 제기 섹션 -->
+<section class="py-20 bg-white relative">
+<div class="container mx-auto px-4">
+<div class="max-w-3xl mx-auto text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">외주 프로젝트, 왜 늘 불안할까요?</h2>
+<p class="text-lg text-gray-700">외주 맡기려면 손이 너무 많이 가요. 믿을 만한 사람 찾는 것도, 작업 맞추는 것도, 마감 챙기는 것도… <br>이런 고민, 저희도 잘 알아요.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+<div class="bg-white p-6 md:p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<h3 class="text-xl font-semibold text-gray-900 mb-3">정보의 비대칭, 불안한 가격</h3>
+<p class="text-gray-700">"혹시 나만 비싸게 주고 맡기는 건 아닐까?" 정보가 부족하니 바가지 쓸까 봐 늘 불안합니다.</p>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<h3 class="text-xl font-semibold text-gray-900 mb-3">소통의 갑갑함, 오해만 쌓이는 대화</h3>
+<p class="text-gray-700">"지금 어떻게 진행되고 있는 거지? 왜 속 시원하게 설명해주지 않는 거야!" 답답한 소통은 불신만 키웁니다.</p>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<h3 class="text-xl font-semibold text-gray-900 mb-3">나만 기다리는 일정 지연</h3>
+<p class="text-gray-700">"내 프로젝트, 혹시 뒷전으로 밀린 건 아니겠지?" 소통도 제대로 안 되니 속절없이 스케줄만 늘어납니다.</p>
+</div>
+<div class="bg-white p-8 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+<h3 class="text-xl font-semibold text-gray-900 mb-3">내 맘 같지 않은 결과물</h3>
+<p class="text-gray-700">"분명 이렇게 설명했는데… 왜 전혀 다른 결과가 나온 거죠?" 속 시원하게 표현하지 못하니 답답할 뿐입니다.</p>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-br from-transparent to-gray-50 opacity-30 pointer-events-none"></div>
+</div>
+</section>
+<!-- 솔루션 소개 섹션 -->
+<section id="solutions" class="py-20 bg-gradient-to-br from-[#F8F9FF] to-[#F0F4FF]">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<span class="text-primary/80 uppercase tracking-wider text-sm font-medium">솔루션 소개</span>
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">프로젝트를 쉽고, 간편하게</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-6xl mx-auto">
+<div class="bg-white p-4 md:p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow flex items-start group">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+<i class="ri-draft-line ri-2x text-primary"></i>
+</div>
+<div class="ml-6 text-left">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">체계적인 프로젝트 기획</h3>
+<p class="text-gray-600">프로젝트의 시작부터 끝까지 완벽한 실행을 위한 상세 계획을 수립합니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow flex items-start group">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+<i class="ri-team-line ri-2x text-primary"></i>
+</div>
+<div class="ml-6 text-left">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">원활한 의사소통</h3>
+<p class="text-gray-600">모든 이해관계자 간의 명확한 소통과 적시적인 업데이트를 제공합니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow flex items-start group">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+<i class="ri-money-dollar-circle-line ri-2x text-primary"></i>
+</div>
+<div class="ml-6 text-left">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">비용 관리</h3>
+<p class="text-gray-600">전략적 관리와 투명한 비용 추적으로 예산을 효율적으로 관리합니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow flex items-start group">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+<i class="ri-shield-check-line ri-2x text-primary"></i>
+</div>
+<div class="ml-6 text-left">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">품질 관리</h3>
+<p class="text-gray-600">명확한 기준과 철저한 검수를 통해 최고 품질의 결과물을 보장합니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow flex items-start group">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+<i class="ri-lock-line ri-2x text-primary"></i>
+</div>
+<div class="ml-6 text-left">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">지적 재산권 보호</h3>
+<p class="text-gray-600">명확한 소유권 조항과 안전한 데이터 처리로 자산을 보호합니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow flex items-start group">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+<i class="ri-customer-service-2-line ri-2x text-primary"></i>
+</div>
+<div class="ml-6 text-left">
+<h3 class="text-xl font-semibold text-gray-900 mb-2">지속적인 지원</h3>
+<p class="text-gray-600">프로젝트 전 과정에 걸쳐 지속적인 지원과 유지보수를 제공합니다.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- PM 소개 섹션 -->
+<section id="manager" class="py-20 bg-white">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<span class="text-primary/80 uppercase tracking-wider text-sm font-medium">매니저 소개</span>
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">왜 Mowork매니저가 필요할까요?</h2>
+<p class="text-xl text-gray-700 max-w-2xl mx-auto">MOWORK 매니저는 단순한 관리자가 아닌, 프로젝트의 성공을 이끄는 핵심 전문가입니다</p>
+</div>
+<div class="max-w-5xl mx-auto mb-20 bg-gradient-to-br from-[#F8F9FF] to-[#F0F4FF] rounded-2xl p-8 md:p-12">
+<h3 class="text-2xl font-bold text-gray-900 mb-8 text-center">프로젝트 성공률 비교 분석</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div id="successRateChart" class="w-full h-[300px]"></div>
+<div class="space-y-6">
+<div>
+<h4 class="text-lg font-semibold text-gray-900 mb-2">전문 프로젝트 매니저가 있는 프로젝트</h4>
+<ul class="space-y-2">
+<li class="flex items-center text-gray-700">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span>목표 일정 준수율 85%</span>
+</li>
+<li class="flex items-center text-gray-700">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span>예산 초과 위험 62% 감소</span>
+</li>
+<li class="flex items-center text-gray-700">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span>이해관계자 만족도 92%</span>
+</li>
+</ul>
+</div>
+<div class="pt-4 border-t border-gray-200">
+<p class="text-sm text-gray-600">* PMI(Project Management Institute) 2023년 글로벌 프로젝트 성과 분석 보고서 기준</p>
+</div>
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const chart = echarts.init(document.getElementById('successRateChart'));
+const option = {
+animation: false,
+tooltip: {
+trigger: 'axis',
+backgroundColor: 'rgba(255, 255, 255, 0.9)',
+textStyle: {
+color: '#1f2937'
+}
+},
+grid: {
+top: '10%',
+right: '5%',
+bottom: '15%',
+left: '15%'
+},
+xAxis: {
+type: 'category',
+data: ['예산 준수', '일정 준수', '목표 달성', '고객 만족'],
+axisLabel: {
+color: '#1f2937'
+}
+},
+yAxis: {
+type: 'value',
+min: 0,
+max: 100,
+axisLabel: {
+formatter: '{value}%',
+color: '#1f2937'
+}
+},
+series: [
+{
+name: 'PM 있음',
+type: 'bar',
+data: [82, 85, 89, 92],
+itemStyle: {
+color: 'rgba(87, 181, 231, 1)',
+borderRadius: [4, 4, 0, 0]
+}
+},
+{
+name: 'PM 없음',
+type: 'bar',
+data: [45, 38, 42, 51],
+itemStyle: {
+color: 'rgba(252, 141, 98, 1)',
+borderRadius: [4, 4, 0, 0]
+}
+}
+],
+legend: {
+data: ['PM 있음', 'PM 없음'],
+bottom: '0%',
+textStyle: {
+color: '#1f2937'
+}
+}
+};
+chart.setOption(option);
+});
+</script>
+<div class="max-w-6xl mx-auto mb-20">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mb-12 md:mb-16">
+<div>
+<h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">Mowork 매니저는 이런 일을 합니다</h3>
+<ul class="space-y-4">
+<li class="flex items-start">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-1 flex-shrink-0">
+<i class="ri-focus-3-line text-primary"></i>
+</div>
+<div class="ml-4">
+<h4 class="text-lg font-semibold text-gray-900 mb-1">목표 설정과 전략 수립</h4>
+<p class="text-base text-gray-700">프로젝트의 명확한 목표를 설정하고, 이를 달성하기 위한 최적의 전략을 수립합니다.</p>
+</div>
+</li>
+<li class="flex items-start">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-1 flex-shrink-0">
+<i class="ri-team-line text-primary"></i>
+</div>
+<div class="ml-4">
+<h4 class="text-lg font-semibold text-gray-900 mb-1">팀 구성과 리더십</h4>
+<p class="text-base text-gray-700">프로젝트에 필요한 최적의 팀을 구성하고, 팀원들의 역량을 최대한 끌어냅니다.</p>
+</div>
+</li>
+<li class="flex items-start">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mt-1 flex-shrink-0">
+<i class="ri-shield-check-line text-primary"></i>
+</div>
+<div class="ml-4">
+<h4 class="text-lg font-semibold text-gray-900 mb-1">리스크 관리</h4>
+<p class="text-base text-gray-700">잠재적 위험을 미리 파악하고 대응 방안을 마련하여, 프로젝트를 안전하게 지켜냅니다.</p>
+</div>
+</li>
+</ul>
+</div>
+<div>
+<img src="https://static.readdy.ai/image/7daee845f7f1470b0723a241ff60c728/d585f327e16ef7b3181abf5b3f306643.png" alt="PM Leadership" class="w-full h-auto">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="order-2 md:order-1">
+<img src="https://static.readdy.ai/image/7daee845f7f1470b0723a241ff60c728/6f9d10b9659291815baeb3d506627da2.png" alt="PM Analysis" class="w-full h-auto">
+</div>
+<div class="order-1 md:order-2">
+<h3 class="text-2xl font-bold text-gray-900 mb-6">Mowork 매니저가 없다면 어떻게 될까요?</h3>
+<div class="space-y-4">
+<div class="flex items-start">
+<div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mt-1 flex-shrink-0">
+<i class="ri-close-line text-red-500"></i>
+</div>
+<div class="ml-4">
+<h4 class="font-semibold text-gray-900 mb-1">불명확한 책임과 역할</h4>
+<p class="text-gray-700">누가 무엇을 해야 하는지 모호해지고, 중요한 업무가 누락될 수 있습니다.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mt-1 flex-shrink-0">
+<i class="ri-close-line text-red-500"></i>
+</div>
+<div class="ml-4">
+<h4 class="font-semibold text-gray-900 mb-1">일정과 비용 초과</h4>
+<p class="text-gray-700">체계적인 관리 부재로 예상보다 더 많은 시간과 비용이 소요됩니다.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mt-1 flex-shrink-0">
+<i class="ri-close-line text-red-500"></i>
+</div>
+<div class="ml-4">
+<h4 class="font-semibold text-gray-900 mb-1">품질 저하</h4>
+<p class="text-gray-700">전문적인 품질 관리 없이는 기대하는 수준의 결과물을 얻기 어렵습니다.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 md:mt-20 bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl md:rounded-2xl p-6 md:p-12">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center">
+<div>
+<h3 class="text-2xl font-bold text-gray-900 mb-4">MOWORK 매니저가 특별한 이유</h3>
+<ul class="space-y-4">
+<li class="flex items-center">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span class="text-base md:text-lg text-gray-700">평균 3년 이상의 실무 경험 보유</span>
+</li>
+<li class="flex items-center">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span class="text-base md:text-lg text-gray-700">업계 최고 수준의 자격 인증</span>
+</li>
+<li class="flex items-center">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span class="text-base md:text-lg text-gray-700">지속적인 교육과 역량 강화</span>
+</li>
+<li class="flex items-center">
+<i class="ri-check-line text-primary ri-lg mr-3"></i>
+<span class="text-base md:text-lg text-gray-700">다양한 산업 분야의 프로젝트 경험</span>
+</li>
+</ul>
+</div>
+<div class="text-center">
+<div class="inline-block bg-white rounded-xl p-6 shadow-sm">
+<div class="text-4xl font-bold text-primary mb-2">98%</div>
+<p class="text-gray-700">프로젝트 성공률</p>
+<div class="w-full h-px bg-gray-200 my-4"></div>
+<div class="text-4xl font-bold text-primary mb-2">96%</div>
+<p class="text-gray-700">고객 만족도</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 사용 방법 섹션 -->
+<section id="how-it-works" class="py-12 md:py-20 bg-white">
+<div class="container mx-auto px-4">
+<div class="max-w-3xl mx-auto text-center mb-8 md:mb-16">
+<h2 class="text-2xl md:text-4xl font-bold text-gray-900 mb-4 md:mb-6">당신의 프로젝트, 이렇게 진행됩니다</h2>
+</div>
+<div class="max-w-4xl mx-auto">
+<div class="relative">
+<div class="absolute left-8 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-primary/20"></div>
+<div class="space-y-8 md:space-y-12">
+<div class="flex items-start pl-16 md:pl-0">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-full z-10 absolute left-2 md:left-1/2 md:-translate-x-1/2">
+<span class="text-lg font-medium">1</span>
+</div>
+<div class="w-full md:w-1/2 md:pr-12 md:text-right">
+<div class="bg-white p-4 rounded-lg shadow-sm md:shadow-none">
+<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">아이디어 알려주기</h3>
+<p class="text-gray-700">간단한 폼에 프로젝트 생각을 적어 보내주세요.</p>
+</div>
+</div>
+</div>
+<div class="flex items-start pl-16 md:pl-0">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-full z-10 absolute left-2 md:left-1/2 md:-translate-x-1/2">
+<span class="text-lg font-medium">2</span>
+</div>
+<div class="w-full md:w-1/2 md:pl-12 md:ml-auto">
+<div class="bg-white p-4 rounded-lg shadow-sm md:shadow-none">
+<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">매니저 연결</h3>
+<p class="text-gray-700">딱 맞는 매니저를 바로 만나게 해드릴게요.</p>
+</div>
+</div>
+</div>
+<div class="flex items-start pl-16 md:pl-0">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-full z-10 absolute left-2 md:left-1/2 md:-translate-x-1/2">
+<span class="text-lg font-medium">3</span>
+</div>
+<div class="w-full md:w-1/2 md:pr-12 md:text-right">
+<div class="bg-white p-4 rounded-lg shadow-sm md:shadow-none">
+<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">함께 준비</h3>
+<p class="text-gray-700">세부 계획을 같이 짜볼게요.</p>
+</div>
+</div>
+</div>
+<div class="flex items-start pl-16 md:pl-0">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-full z-10 absolute left-2 md:left-1/2 md:-translate-x-1/2">
+<span class="text-lg font-medium">4</span>
+</div>
+<div class="w-full md:w-1/2 md:pl-12 md:ml-auto">
+<div class="bg-white p-4 rounded-lg shadow-sm md:shadow-none">
+<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">진행 지켜보기</h3>
+<p class="text-gray-700">팀이 움직이는 걸 편하게 보시면 돼요.</p>
+</div>
+</div>
+</div>
+<div class="flex items-start pl-16 md:pl-0">
+<div class="w-12 h-12 flex items-center justify-center bg-primary text-white rounded-full z-10 absolute left-2 md:left-1/2 md:-translate-x-1/2">
+<span class="text-lg font-medium">5</span>
+</div>
+<div class="w-full md:w-1/2 md:pr-12 md:text-right">
+<div class="bg-white p-4 rounded-lg shadow-sm md:shadow-none">
+<h3 class="text-lg md:text-xl font-semibold text-gray-900 mb-2">확인하고 마무리</h3>
+<p class="text-gray-700">결과물 보고 마음에 들면 끝!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-16 text-center">
+<p class="text-gray-600 mb-4">외주, 5분이면 시작할 수 있어요!</p>
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/5b78a738-57a3-41a3-a6bb-c25b6fba9b13" data-readdy="true" class="bg-primary text-white py-3 px-8 !rounded-button font-medium hover:opacity-90 transition-opacity whitespace-nowrap inline-block">지금 시작하기</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+=======
+</div>
+</div>
+</section>
+<!-- FAQ 섹션 -->
+<section id="faq" class="py-20 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="max-w-3xl mx-auto text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">자주 묻는 질문</h2>
+<p class="text-lg text-gray-700">MOWORK에 대해 궁금하신 점을 알려드립니다</p>
+</div>
+<div class="max-w-3xl mx-auto space-y-6">
+<div class="bg-white p-6 rounded-lg shadow-sm">
+<button class="accordion-btn w-full flex justify-between items-center">
+<span class="text-lg font-medium text-gray-900">프로젝트 비용은 어떻게 결정되나요?</span>
+<i class="ri-arrow-down-s-line text-gray-500"></i>
+</button>
+<div class="accordion-content mt-4">
+<p class="text-gray-700">프로젝트의 규모, 복잡도, 기간 등을 고려하여 맞춤형으로 견적을 산출합니다. 프로젝트 예산 범위에 맞춘 유연한 솔루션 제공합니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm">
+<button class="accordion-btn w-full flex justify-between items-center">
+<span class="text-lg font-medium text-gray-900">프로젝트 기간은 얼마나 걸리나요?</span>
+<i class="ri-arrow-down-s-line text-gray-500"></i>
+</button>
+<div class="accordion-content mt-4">
+<p class="text-gray-700">프로젝트의 성격과 규모에 따라 다르지만, 일반적으로 2주에서 3개월 정도 소요됩니다. 정확한 일정은 초기 상담 시 안내해 드립니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm">
+<button class="accordion-btn w-full flex justify-between items-center">
+<span class="text-lg font-medium text-gray-900">중간에 요구사항을 수정할 수 있나요?</span>
+<i class="ri-arrow-down-s-line text-gray-500"></i>
+</button>
+<div class="accordion-content mt-4">
+<p class="text-gray-700">네, 가능합니다. PM과 상의하여 합리적인 범위 내에서 요구사항을 수정할 수 있습니다. 단, 큰 폭의 수정은 추가 비용이 발생할 수 있습니다.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-lg shadow-sm">
+<button class="accordion-btn w-full flex justify-between items-center">
+<span class="text-lg font-medium text-gray-900">계약서는 어떻게 작성되나요?</span>
+<i class="ri-arrow-down-s-line text-gray-500"></i>
+</button>
+<div class="accordion-content mt-4">
+<p class="text-gray-700">법률 전문가의 검토를 거친 표준 계약서를 사용하며, 프로젝트의 특성에 맞게 맞춤 조항을 추가할 수 있습니다.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA 섹션 -->
+<section id="cta" class="py-20 bg-gradient-to-br from-primary to-[#8B5CF6] text-white">
+<div class="container mx-auto px-4">
+<div class="max-w-4xl mx-auto text-center">
+<h2 class="text-3xl md:text-4xl font-bold mb-6">지금 바로 시작하세요</h2>
+<p class="text-xl mb-8">MOWORK와 함께라면 프로젝트 성공이 쉬워집니다</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/5b78a738-57a3-41a3-a6bb-c25b6fba9b13" data-readdy="true" class="bg-white text-primary py-3 px-8 !rounded-button font-medium hover:opacity-90 transition-opacity whitespace-nowrap">프로젝트 문의하기</a>
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/ebc679ae-fc9f-4907-b742-0206da98f892" data-readdy="true" class="border-2 border-white text-white py-3 px-8 !rounded-button font-medium hover:bg-white/10 transition-colors whitespace-nowrap">서비스 소개 보기</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 푸터 -->
+<footer class="bg-gray-900 text-gray-400 py-12">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div>
+<a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="text-3xl font-bold text-white mb-4 block">Mowork</a>
+<p class="mb-4">외주 프로젝트 관리 전문 플랫폼</p>
+</div>
+<div>
+<h3 class="text-white font-semibold mb-4">서비스</h3>
+<ul class="space-y-2">
+<li><a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/5b78a738-57a3-41a3-a6bb-c25b6fba9b13" data-readdy="true" class="hover:text-white transition-colors">프로젝트 문의하기</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-semibold mb-4">고객지원</h3>
+<ul class="space-y-2">
+<li><a href="#faq" class="hover:text-white transition-colors" onclick="scrollToSection('faq'); return false;">자주 묻는 질문</a></li>
+<li><a href="#how-it-works" class="hover:text-white transition-colors" onclick="scrollToSection('how-it-works'); return false;">사용 방법</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-semibold mb-4">회사정보</h3>
+<ul class="space-y-2">
+<li><a href="#" class="hover:text-white transition-colors">회사 소개</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-800 mt-12 pt-8 text-sm text-center">
+<p>&copy; 2025 MOWORK. All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenu = document.querySelector('.md\\:hidden');
+const mobileNav = document.createElement('div');
+mobileNav.className = 'fixed inset-0 bg-white z-40 transform translate-x-full transition-transform duration-300 ease-in-out';
+mobileNav.innerHTML = `
+<div class="container mx-auto px-4 py-6">
+<div class="flex justify-end mb-6">
+<button class="mobile-close-btn w-10 h-10 flex items-center justify-center">
+<i class="ri-close-line ri-2x text-gray-700"></i>
+</button>
+</div>
+<nav class="flex flex-col space-y-6">
+<a href="#solutions" class="text-lg text-gray-700 hover:text-primary transition-colors">솔루션</a>
+<a href="#manager" class="text-lg text-gray-700 hover:text-primary transition-colors">MOWORK매니저</a>
+<a href="#how-it-works" class="text-lg text-gray-700 hover:text-primary transition-colors">이용방법</a>
+<a href="#faq" class="text-lg text-gray-700 hover:text-primary transition-colors">FAQ</a>
+<a href="https://readdy.ai/home/70bb66fd-1f28-40eb-a2fb-e3d710bdd1e6/5b78a738-57a3-41a3-a6bb-c25b6fba9b13" data-readdy="true" class="bg-primary text-white py-3 px-8 !rounded-button font-medium hover:opacity-90 transition-opacity whitespace-nowrap text-center">시작하기</a>
+</nav>
+</div>
+`;
+document.body.appendChild(mobileNav);
+mobileMenu.addEventListener('click', function() {
+mobileNav.classList.remove('translate-x-full');
+document.body.style.overflow = 'hidden';
+});
+const mobileCloseBtn = mobileNav.querySelector('.mobile-close-btn');
+mobileCloseBtn.addEventListener('click', function() {
+mobileNav.classList.add('translate-x-full');
+document.body.style.overflow = '';
+});
+const mobileNavLinks = mobileNav.querySelectorAll('a[href^="#"]');
+mobileNavLinks.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const sectionId = this.getAttribute('href').substring(1);
+scrollToSection(sectionId);
+mobileNav.classList.add('translate-x-full');
+document.body.style.overflow = '';
+});
+});
+const accordionBtns = document.querySelectorAll('.accordion-btn');
+accordionBtns.forEach(btn => {
+btn.addEventListener('click', function() {
+const content = this.nextElementSibling;
+const icon = this.querySelector('i');
+content.classList.toggle('active');
+icon.style.transform = content.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0)';
+});
+});
+});
+function scrollToSection(sectionId) {
+const section = document.getElementById(sectionId);
+const headerOffset = 80;
+const elementPosition = section.getBoundingClientRect().top;
+const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+window.scrollTo({
+top: offsetPosition,
+behavior: "smooth"
+});
+}
+</script>
+</body>
+</html>
